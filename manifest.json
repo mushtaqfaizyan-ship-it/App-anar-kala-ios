@@ -1,0 +1,12 @@
+{
+  "name": "انار کالا",
+  "short_name": "انار کالا",
+  "description": "سامانه خرید و فروش انار کالا",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b5122b",
+  "orientation": "portrait",
+  "lang": "fa",
+  "dir": "rtl"
+}
