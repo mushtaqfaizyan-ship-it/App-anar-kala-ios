@@ -1,0 +1,57 @@
+name: Build iOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create www folder
+        run: |
+          mkdir -p www
+          cp index.html www/index.html
+          cp style.css www/style.css
+          cp app.js www/app.js
+
+      - name: Install Capacitor
+        run: |
+          npm install @capacitor/core@7 @capacitor/cli@7 @capacitor/ios@7
+          npm install --save-dev typescript@5.8.3
+
+      - name: Add iOS
+        run: |
+          npx cap add ios
+
+      - name: Sync iOS
+        run: |
+          npx cap sync ios
+
+      - name: Build iOS
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -workspace App/App.xcworkspace \
+            -scheme App \
+            -sdk iphoneos \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload iOS build
+        uses: actions/upload-artifact@v4
+        with:
+          name: anar-kala-ios-build
+          path: ios/build/Build/Products/Debug-iphoneos/
